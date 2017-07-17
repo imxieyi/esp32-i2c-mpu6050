@@ -23,50 +23,43 @@ bool MPU6050::init() {
 }
 
 short MPU6050::getAccX() {
-    uint8_t h = 0, l = 0;
-    h = i2c -> slave_read_byte(MPU6050_ADDR, ACCEL_XOUT_H);
-    l = i2c -> slave_read_byte(MPU6050_ADDR, ACCEL_XOUT_L);
-    return h << 8 | l;
+    uint8_t r[0];
+    i2c -> slave_read(MPU6050_ADDR, ACCEL_XOUT_H, r, 2);
+    return r[0] << 8 | r[1];
 }
 
 short MPU6050::getAccY() {
-    uint8_t h = 0, l = 0;
-    h = i2c -> slave_read_byte(MPU6050_ADDR, ACCEL_YOUT_H);
-    l = i2c -> slave_read_byte(MPU6050_ADDR, ACCEL_YOUT_L);
-    return h << 8 | l;
+    uint8_t r[0];
+    i2c -> slave_read(MPU6050_ADDR, ACCEL_YOUT_H, r, 2);
+    return r[0] << 8 | r[1];
 }
 
 short MPU6050::getAccZ() {
-    uint8_t h = 0, l = 0;
-    h = i2c -> slave_read_byte(MPU6050_ADDR, ACCEL_ZOUT_H);
-    l = i2c -> slave_read_byte(MPU6050_ADDR, ACCEL_ZOUT_L);
-    return h << 8 | l;
+    uint8_t r[0];
+    i2c -> slave_read(MPU6050_ADDR, ACCEL_ZOUT_H, r, 2);
+    return r[0] << 8 | r[1];
 }
 
 short MPU6050::getGyroX() {
-    uint8_t h = 0, l = 0;
-    h = i2c -> slave_read_byte(MPU6050_ADDR, GYRO_XOUT_H);
-    l = i2c -> slave_read_byte(MPU6050_ADDR, GYRO_XOUT_L);
-    return h << 8 | l;
+    uint8_t r[0];
+    i2c -> slave_read(MPU6050_ADDR, GYRO_XOUT_H, r, 2);
+    return r[0] << 8 | r[1];
 }
 
 short MPU6050::getGyroY() {
-    uint8_t h = 0, l = 0;
-    h = i2c -> slave_read_byte(MPU6050_ADDR, GYRO_YOUT_H);
-    l = i2c -> slave_read_byte(MPU6050_ADDR, GYRO_YOUT_L);
-    return h << 8 | l;
+    uint8_t r[0];
+    i2c -> slave_read(MPU6050_ADDR, GYRO_YOUT_H, r, 2);
+    return r[0] << 8 | r[1];
 }
 
 short MPU6050::getGyroZ() {
-    uint8_t h = 0, l = 0;
-    h = i2c -> slave_read_byte(MPU6050_ADDR, GYRO_ZOUT_H);
-    l = i2c -> slave_read_byte(MPU6050_ADDR, GYRO_ZOUT_L);
-    return h << 8 | l;
+    uint8_t r[0];
+    i2c -> slave_read(MPU6050_ADDR, GYRO_ZOUT_H, r, 2);
+    return r[0] << 8 | r[1];
 }
 
 short MPU6050::getTemp() {
-    uint8_t h = 0, l = 0;
-    h = i2c -> slave_read_byte(MPU6050_ADDR, TEMP_OUT_H);
-    l = i2c -> slave_read_byte(MPU6050_ADDR, TEMP_OUT_L);
-    return h << 8 | l;
+    uint8_t r[0];
+    i2c -> slave_read(MPU6050_ADDR, TEMP_OUT_H, r, 2);
+    return r[0] << 8 | r[1];
 }
