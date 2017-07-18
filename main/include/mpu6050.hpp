@@ -32,13 +32,13 @@ public:
     ~MPU6050();
     bool init();
 
-    short getAccX();
-    short getAccY();
-    short getAccZ();
+    float getAccX();
+    float getAccY();
+    float getAccZ();
 
-    short getGyroX();
-    short getGyroY();
-    short getGyroZ();
+    float getGyroX();
+    float getGyroY();
+    float getGyroZ();
 
     short getTemp();
 

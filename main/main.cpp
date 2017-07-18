@@ -2,6 +2,7 @@
 #include "esp_log.h"
 
 #include "mpu6050.hpp"
+#include "kalmanfilter.hpp"
 #include <cmath>
 
 static void mpu6050_task(void *pvParameters) {
@@ -13,9 +14,15 @@ static void mpu6050_task(void *pvParameters) {
     }
 	ESP_LOGI("mpu6050", "init success!");
 
-    short ax,ay,az,gx,gy,gz,t;
-    float accx,accy,accz;
+    float ax,ay,az,gx,gy,gz;
     float pitch, roll;
+    float fpitch, froll;
+
+    KALMAN pfilter(0.005);
+    KALMAN rfilter(0.005);
+
+    uint32_t lasttime = 0;
+    int count = 0;
 
     while(1) {
         ax = -mpu.getAccX();
@@ -24,16 +31,22 @@ static void mpu6050_task(void *pvParameters) {
         gx = mpu.getGyroX();
         gy = mpu.getGyroY();
         gz = mpu.getGyroZ();
-        accx = ax;
-        accy = ay;
-        accz = az;
-        pitch = atan(accx/accz)*57.2958;
-        roll = atan(accy/accz)*57.2958;
-        ESP_LOGI("mpu6050", "Acc: ( %d, %d, %d)", ax, ay, az);
-        ESP_LOGI("mpu6050", "Gyro: ( %d, %d, %d)", gx, gy, gz);
-        ESP_LOGI("mpu6050", "Pitch: %.3f", pitch);
-        ESP_LOGI("mpu6050", "Roll: %.3f", roll);
-        vTaskDelay(1000/portTICK_RATE_MS);
+        pitch = atan(ax/az)*57.2958;
+        roll = atan(ay/az)*57.2958;
+        fpitch = pfilter.filter(pitch, gy);
+        froll = rfilter.filter(roll, -gx);
+        count++;
+        if(esp_log_timestamp() / 1000 != lasttime) {
+            lasttime = esp_log_timestamp() / 1000;
+            ESP_LOGI("mpu6050", "Samples: %d", count);
+            count = 0;
+            ESP_LOGI("mpu6050", "Acc: ( %.3f, %.3f, %.3f)", ax, ay, az);
+            ESP_LOGI("mpu6050", "Gyro: ( %.3f, %.3f, %.3f)", gx, gy, gz);
+            ESP_LOGI("mpu6050", "Pitch: %.3f", pitch);
+            ESP_LOGI("mpu6050", "Roll: %.3f", roll);
+            ESP_LOGI("mpu6050", "FPitch: %.3f", fpitch);
+            ESP_LOGI("mpu6050", "FRoll: %.3f", froll);
+        }
     }
 
 }
